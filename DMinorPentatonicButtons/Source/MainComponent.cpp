@@ -225,23 +225,42 @@ void MainComponent::paint (juce::Graphics& g)
 
 void MainComponent::resized()
 {
-    // This is called when the MainContentComponent is resized.
-    // If you add any child components, this is where you should
-    // update their positions.
-    auto x = 20;
-    auto top = 20;
-    auto bottomMargin = 20;
-    auto numButtons = buttonLines.size();
-    if (numButtons == 0) return;
-    auto availableHeight = getHeight() - top - bottomMargin;
-    auto spacing = (numButtons > 1) ? (availableHeight - buttonLines[0]->getHeight()) / (numButtons - 1) : 0;
-    for (int i = 0; i < numButtons; ++i)
+	//// horizontal deployment of buttons
+ //   auto x = 20;
+ //   auto top = 20;
+ //   auto bottomMargin = 20;
+ //   auto numButtons = buttonLines.size();
+ //   if (numButtons == 0) return;
+ //   auto availableHeight = getHeight() - top - bottomMargin;
+ //   auto spacing = (numButtons > 1) ? (availableHeight - buttonLines[0]->getHeight()) / (numButtons - 1) : 0;
+ //   for (int i = 0; i < numButtons; ++i)
+ //   {
+ //       auto* button = buttonLines[i];
+ //       int y = (int)(top + i * spacing);
+ //       button->setTopLeftPosition(x, y);
+ //       button->setSize(getWidth() - 2 * x, 20);
+ //       addAndMakeVisible(button);
+ //   }
+ // 
+    // vertical deployment of buttons
+    const int margin = 20;
+    const int gap = 12;
+    const int buttonW = 160;
+	const int buttonH = 40;
+    const int maxHeight = getHeight() - margin;
+    int x = margin;
+    int y = margin;
+    for (auto* button : buttonLines)
     {
-        auto* button = buttonLines[i];
-        int y = (int)(top + i * spacing);
-        button->setTopLeftPosition(x, y);
-        button->setSize(getWidth() - 2 * x, 20);
-        addAndMakeVisible(button);
+		button->setBounds(x, y, buttonW, buttonH);
+        y += buttonH + gap;
+        if (y + buttonH > maxHeight)
+        {
+            y = margin;
+            x += buttonW + gap;
+		}
+		if (button->getParentComponent() != this)
+            addAndMakeVisible(button);
     }
 }
 
